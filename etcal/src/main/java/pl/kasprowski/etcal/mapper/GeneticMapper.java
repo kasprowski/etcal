@@ -87,37 +87,43 @@ public class GeneticMapper implements Mapper,GeneticOptimizer{
 		Genotype population = Genotype.randomInitialGenotype( conf );
 		
 		
-		IChromosome bestSolutionSoFar = population.getFittestChromosome();
-		log.trace("BEST: "+ bestSolutionSoFar);
+		IChromosome bestInitialSolution = population.getFittestChromosome();
+		log.trace("BEST: "+ bestInitialSolution);
 
 //		setBest(new CalibratorPolynomial(data, chromosomeToMask(bestSolutionSoFar)),
 //				chromosomeToMask(bestSolutionSoFar));
 
-		IChromosome previousBestSolution = bestSolutionSoFar;
+		IChromosome currentBestSolution = (IChromosome)bestInitialSolution.clone();
 		int iterationsWithNoProgress = 0;
 		for(int i=0;i<genIterations;i++) {
 			log.trace("Iteration "+i);
 			population.evolve();
-
-			bestSolutionSoFar = population.getFittestChromosome();
+//			for(IChromosome ch:population.getChromosomes())
+//				log.trace(ch);
+//			log.trace("====");
+//			for(Object chl:population.getFittestChromosomes(3) )
+//				log.trace((IChromosome)chl);
+			IChromosome newBestSolution = population.getFittestChromosome();
 //			setBest(new CalibratorPolynomial(data, chromosomeToMask(bestSolutionSoFar)),
 //					chromosomeToMask(bestSolutionSoFar));
-
-			if(myFunc.getFitnessValue(bestSolutionSoFar)<=myFunc.getFitnessValue(previousBestSolution)) {
+			log.trace("New Best solution: "+newBestSolution.getGene(0));
+			if(myFunc.getFitnessValue(newBestSolution)<=myFunc.getFitnessValue(currentBestSolution)) {
 				log.trace("Current solution doesn't improve the previous one" );
 				iterationsWithNoProgress++;
 			}
-			else
+			else {
 				iterationsWithNoProgress = 0;
+				currentBestSolution = (IChromosome)newBestSolution.clone();
+			}
 			if(iterationsWithNoProgress>numIterationsWithNoProgress) {
 				log.trace("No progress for "+iterationsWithNoProgress+ " iterations - aborting" );
 				break;
 			}
-			previousBestSolution = bestSolutionSoFar;
+			
 			
 			log.trace("Iteration "+i+ " result\t"+ 
-					1/myFunc.getFitnessValue(bestSolutionSoFar)+ " "+
-					chromosomeToMapping(bestSolutionSoFar)
+					1/myFunc.getFitnessValue(currentBestSolution)+ " "+
+					chromosomeToMapping(currentBestSolution)
 					);
 		}
 
@@ -125,15 +131,15 @@ public class GeneticMapper implements Mapper,GeneticOptimizer{
 //		setBest(new CalibratorPolynomial(data, chromosomeToMask(population.getFittestChromosome())),
 //				chromosomeToMask(population.getFittestChromosome()));
 		log.debug("Evolution finished, best: "+
-				1/myFunc.getFitnessValue(bestSolutionSoFar)+" "+
-				chromosomeToMapping(bestSolutionSoFar)
+				1/myFunc.getFitnessValue(currentBestSolution)+" "+
+				chromosomeToMapping(currentBestSolution)
 				);
 
 //		setOptimizing(false);
 		//	return chromosomeToMask(population.getFittestChromosome());
 		
 		
-		return chromosomeToMapping(bestSolutionSoFar);
+		return chromosomeToMapping(currentBestSolution);
 		
 	}
 	

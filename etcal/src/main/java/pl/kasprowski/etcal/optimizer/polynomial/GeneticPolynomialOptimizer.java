@@ -26,10 +26,14 @@ public class GeneticPolynomialOptimizer extends PolynomialOptimizer implements G
 	public int getGenIterations() {return genIterations;}
 	public void setGenIterations(Integer iterations) {this.genIterations = iterations;}
 
+	private int numIterationsWithNoProgress = 4;
+	public int getNumIterationsWithNoProgress() {return numIterationsWithNoProgress;}
+	public void setNumIterationsWithNoProgress(Integer numIterationsWithNoProgress) {this.numIterationsWithNoProgress = numIterationsWithNoProgress;}
+
 
 	@Override
 	public void optimize(DataUnits dataUnits) throws Exception {
-//		this.setDataUnits(dataUnits);
+		this.setDataUnits(dataUnits);
 		
 		//RegressionData data = DU2RDConverter.dataUnits2RegressionData(dataUnits);
 		
@@ -53,39 +57,42 @@ public class GeneticPolynomialOptimizer extends PolynomialOptimizer implements G
 		log.debug("Starting evolution");
 		Genotype population = Genotype.randomInitialGenotype( conf );
 		population.evolve();
-		IChromosome bestSolutionSoFar = population.getFittestChromosome();
-		log.trace("BEST: "+ MaskedPolynomialProblem.maskAsString(chromosomeToMask(bestSolutionSoFar)));
+		IChromosome bestInitialSolution = population.getFittestChromosome();
+		log.trace("BEST: "+ MaskedPolynomialProblem.maskAsString(chromosomeToMask(bestInitialSolution)));
 
-		setBest(chromosomeToMask(bestSolutionSoFar));
+		setBest(chromosomeToMask(bestInitialSolution));
 
-		IChromosome previousBestSolution = bestSolutionSoFar;
+		IChromosome currentBestSolution = (IChromosome)bestInitialSolution.clone();
 		int iterationsWithNoProgress = 0;
 		for(int i=0;i<genIterations;i++) {
 			log.trace("Iteration "+i);
 			population.evolve();
 
-			bestSolutionSoFar = population.getFittestChromosome();
-			setBest(chromosomeToMask(bestSolutionSoFar));
-
-			if(myFunc.getFitnessValue(bestSolutionSoFar)<=myFunc.getFitnessValue(previousBestSolution)) {
+			IChromosome newBestSolution = population.getFittestChromosome();
+	
+			if(myFunc.getFitnessValue(newBestSolution)<=myFunc.getFitnessValue(currentBestSolution)) {
 				log.trace("Current solution doesn't improve the previous one" );
 				iterationsWithNoProgress++;
 			}
-			else
+			else {
 				iterationsWithNoProgress = 0;
-			if(iterationsWithNoProgress>3) {
+				currentBestSolution = (IChromosome)newBestSolution.clone();
+				setBest(chromosomeToMask(currentBestSolution));
+			}
+			if(iterationsWithNoProgress>numIterationsWithNoProgress) {
 				log.trace("No progress for "+iterationsWithNoProgress+ " iterations - aborting" );
 				break;
 			}
-			previousBestSolution = bestSolutionSoFar;
 			
-			log.trace("Iteration "+i+ " result\t"+ MaskedPolynomialProblem.maskAsString(chromosomeToMask(bestSolutionSoFar))+"\t"
-					+ 1/myFunc.getFitnessValue(bestSolutionSoFar));
-		}
+	
 
-		setBest(chromosomeToMask(population.getFittestChromosome()));
-		log.debug("Evolution finished, best: "+MaskedPolynomialProblem.maskAsString(chromosomeToMask(bestSolutionSoFar))+"\t"
-				+ 1/myFunc.getFitnessValue(bestSolutionSoFar));
+			log.trace("Iteration "+i+ " result\t"+ MaskedPolynomialProblem.maskAsString(chromosomeToMask(currentBestSolution))+"\t"
+					+ 1/myFunc.getFitnessValue(currentBestSolution));
+		}
+		
+		setBest(chromosomeToMask(currentBestSolution));
+		log.debug("Evolution finished, best: "+MaskedPolynomialProblem.maskAsString(chromosomeToMask(currentBestSolution))+"\t"
+				+ 1/myFunc.getFitnessValue(currentBestSolution));
 
 //		setOptimizing(false);
 		//	return chromosomeToMask(population.getFittestChromosome());

@@ -1,10 +1,12 @@
 package pl.kasprowski.etcal.optimizer;
 
+import org.apache.log4j.Logger;
+
 import pl.kasprowski.etcal.calibration.Calibrator;
 import pl.kasprowski.etcal.dataunits.DataUnits;
 
 public abstract class AbstractOptimizer implements Optimizer{
-
+	Logger log = Logger.getLogger(AbstractOptimizer.class);
 	public abstract void optimize(DataUnits data) throws Exception;
 
 	private DataUnits dataUnits;
@@ -23,6 +25,7 @@ public abstract class AbstractOptimizer implements Optimizer{
 
 	protected void setBest(Calibrator best) {
 		best.calculate(dataUnits);
+		log.debug("Calculated "+best.toString());
 		this.best = best;
 	}
 

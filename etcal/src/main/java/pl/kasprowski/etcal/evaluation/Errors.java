@@ -59,9 +59,12 @@ public class Errors {
 	public String toString() {
 //		return "Errors [rSquareX=" + rSquareX + ", rSquareY=" + rSquareY + ", mseX=" + mseX + ", mseY=" + mseY
 //				+ ", absError=" + absError + ", absErrorX=" + absErrorX + ", absErrorY=" + absErrorY + "]";
-		return "Errors [mseX=" + df.format(mseX) + 
+		return "Errors " +
+				"[rSquareX=" + df.format(rSquareX) + 
+				"; rSquareY=" + df.format(rSquareY) +
+				"; mseX=" + df.format(mseX) + 
 				"; mseY=" + df.format(mseY) +
-				"; absError=" + df.format(absError) + 
+//				"; absError=" + df.format(absError) + 
 				"; absErrorX=" + df.format(absErrorX) + 
 				"; absErrorY=" + df.format(absErrorY) + "]";
 

@@ -88,7 +88,6 @@ public class CalibratorPolynomial implements Calibrator{
 		else
 			variablesY = optimum.getPoint();
 		//		showVariables(axis);
-
 	}
 
 	public void showVariables() {
@@ -117,6 +116,10 @@ public class CalibratorPolynomial implements Calibrator{
 
 	@Override
 	public String toString() {
-		return getClass().getName()+" mask="+getMask();
+		return getClass().getName()+" mask:"+getMask();
+		//return "{\"type\"=\""+getClass().getName()+"\" \"params\":{\"mask\"=\""+getMask()+"\"}}";
+//		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+//		return gson.toJson(this);
+		
 	}
 }

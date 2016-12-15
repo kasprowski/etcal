@@ -144,7 +144,7 @@ public class MaskedPolynomialProblem extends PolynomialProblem {
 	 * @param k
 	 * @return
 	 */
-	static int komb(int n,int k) {
+	public static int komb(int n,int k) {
 		return factorial(n+k-1)/(factorial(k)*factorial(n-1));
 	}
 

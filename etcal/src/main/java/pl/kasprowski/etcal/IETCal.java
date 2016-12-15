@@ -7,7 +7,7 @@ import pl.kasprowski.etcal.calibration.Calibrator;
 import pl.kasprowski.etcal.dataunits.DataUnits;
 import pl.kasprowski.etcal.dataunits.Target;
 import pl.kasprowski.etcal.evaluation.Errors;
-import pl.kasprowski.etcal.filters.CalFilter;
+import pl.kasprowski.etcal.filters.Filter;
 import pl.kasprowski.etcal.helpers.ObjDef;
 import pl.kasprowski.etcal.mapper.Mapper;
 import pl.kasprowski.etcal.optimizer.Optimizer;
@@ -40,7 +40,7 @@ public interface IETCal {
 	 * Adds filter implementing pl.kasprowski.calsoft.filters.CalFilter interface
 	 * @param calFilter
 	 */
-	public void addFilter(CalFilter calFilter);
+	public void addFilter(Filter calFilter);
 	/**
 	 * Removes all filters
 	 */
@@ -48,7 +48,7 @@ public interface IETCal {
 	
 
 	public void useFilter(ObjDef param) throws Exception;
-	public void useFilter(CalFilter calFilter);
+	public void useFilter(Filter calFilter);
 	/**
 	 * Builds calibration model using a generic calibrator and data added by add() method
 	 * Calibrator must extend pl.kasprowski.calibration.Calibrator class 
@@ -122,6 +122,7 @@ public interface IETCal {
 	 * @return map with all information
 	 */
 	public Map<String,String> getStatusInfo();
+	public String getStatusInfoJSON();
 
 	
 	/**

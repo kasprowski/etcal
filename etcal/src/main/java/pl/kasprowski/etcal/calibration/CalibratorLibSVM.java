@@ -31,7 +31,7 @@ public class CalibratorLibSVM extends CalibratorWeka {
 	
 	@Override
 	public String toString() {
-		return getClass().getName()+" expCost="+expCost+" expGamma="+expGamma;
+		return getClass().getName()+" expCost:"+expCost+" expGamma:"+expGamma;
 	}
 
 

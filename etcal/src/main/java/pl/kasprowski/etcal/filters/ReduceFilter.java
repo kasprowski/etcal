@@ -14,7 +14,7 @@ import pl.kasprowski.etcal.dataunits.Target;
  * @author pawel@kasprowski.pl
  *
  */
-public class ReduceFilter implements CalFilter {
+public class ReduceFilter implements Filter {
 
 	private int len;
 	

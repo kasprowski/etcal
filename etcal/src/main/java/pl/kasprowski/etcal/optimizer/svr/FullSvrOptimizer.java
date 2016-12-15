@@ -12,6 +12,8 @@ import pl.kasprowski.etcal.evaluation.Evaluator;
 
 public class FullSvrOptimizer extends SvrOptimizer {
 	public void optimize(DataUnits dataUnits) throws Exception {
+		this.setDataUnits(dataUnits);
+
 		Evaluator e = new Evaluator();
 
 		

@@ -14,7 +14,7 @@ import pl.kasprowski.etcal.dataunits.Target;
  * @author pawel@kasprowski.pl
  *
  */
-public class MedianFilter implements CalFilter {
+public class MedianFilter implements Filter {
 
 	int len;
 	public MedianFilter setLen(int len) {

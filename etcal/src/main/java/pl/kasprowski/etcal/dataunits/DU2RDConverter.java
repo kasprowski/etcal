@@ -14,7 +14,11 @@ public class DU2RDConverter {
 				indata.add(ind);
 			}
 			//TODO: wyb�r najbardziej prawdopodobnego?
-			Target dep = unit.getTargets().get(0);
+			Target dep;
+			if(unit.getTargets().size()>0)
+				dep = unit.getTargets().get(0);
+			else
+				dep = new Target(0,0,0);
 			double[] arr = indata.stream().mapToDouble(d -> d).toArray();
 			data.addPoint(arr, dep.getX(),dep.getY(), 1/*waga!*/);
 			

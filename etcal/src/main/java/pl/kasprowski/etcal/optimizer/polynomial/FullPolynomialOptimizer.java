@@ -18,6 +18,8 @@ public class FullPolynomialOptimizer extends PolynomialOptimizer {
 	
 
 	public void optimize(DataUnits dataUnits) throws Exception {
+		this.setDataUnits(dataUnits);
+
 		RegressionData data = DU2RDConverter.dataUnits2RegressionData(dataUnits);
 
 		Evaluator e = new Evaluator();

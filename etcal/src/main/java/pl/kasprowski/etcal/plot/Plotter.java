@@ -89,6 +89,31 @@ public class Plotter {
 
 		Graphics gr = img.createGraphics();
 		int s = crossSize;
+
+		if(data1.size()==data2.size()) {
+			for(int i=0;i<data2.size();i++) {	
+				
+				double x = 0;
+				double y = 0;
+				double xx = 0;
+				double yy = 0;
+				if(showTargets1 && showTargets2) {
+					x = (data1.getY1(i) - minX)*sizeX/(maxX-minX);
+					y = (data1.getY2(i) - minY)*sizeY/(maxY-minY);
+					xx = (data2.getY1(i) - minX)*sizeX/(maxX-minX);
+					yy = (data2.getY2(i) - minY)*sizeY/(maxY-minY);
+				} else {
+					x = (data1.getX(i)[0] - minX)*sizeX/(maxX-minX);
+					y = (data1.getX(i)[1] - minY)*sizeY/(maxY-minY);
+					xx = (data2.getX(i)[0] - minX)*sizeX/(maxX-minX);
+					yy = (data2.getX(i)[1] - minY)*sizeY/(maxY-minY);
+				}
+				gr.setColor(Color.GREEN);
+				gr.drawLine((int)x, (int)y, (int)xx, (int)yy);
+			}
+		}
+
+		
 		for(int i=0;i<data1.size();i++) {
 			double x = 0;
 			double y = 0;
@@ -122,28 +147,6 @@ public class Plotter {
 			gr.drawLine((int)x, (int)y+s, (int)x, (int)y-s);
 		}
 
-		if(data1.size()==data2.size()) {
-			for(int i=0;i<data2.size();i++) {	
-				
-				double x = 0;
-				double y = 0;
-				double xx = 0;
-				double yy = 0;
-				if(showTargets1 && showTargets2) {
-					x = (data1.getY1(i) - minX)*sizeX/(maxX-minX);
-					y = (data1.getY2(i) - minY)*sizeY/(maxY-minY);
-					xx = (data2.getY1(i) - minX)*sizeX/(maxX-minX);
-					yy = (data2.getY2(i) - minY)*sizeY/(maxY-minY);
-				} else {
-					x = (data1.getX(i)[0] - minX)*sizeX/(maxX-minX);
-					y = (data1.getX(i)[1] - minY)*sizeY/(maxY-minY);
-					xx = (data2.getX(i)[0] - minX)*sizeX/(maxX-minX);
-					yy = (data2.getX(i)[1] - minY)*sizeY/(maxY-minY);
-				}
-				gr.setColor(Color.GREEN);
-				gr.drawLine((int)x, (int)y, (int)xx, (int)yy);
-			}
-		}
 
 		return img;
 

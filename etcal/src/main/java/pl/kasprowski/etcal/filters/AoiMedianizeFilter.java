@@ -19,7 +19,7 @@ import pl.kasprowski.etcal.dataunits.DataUnits;
 
 //TODO: maybe check the list of targets and medianize only when
 // all targets the same
-public class AoiMedianizeFilter implements CalFilter {
+public class AoiMedianizeFilter implements Filter {
 
 	/**
 	 * Takes only sequences longer than minSize points

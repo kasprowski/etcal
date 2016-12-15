@@ -22,21 +22,30 @@ public class MappingFittnessFunction extends FitnessFunction {
 	
 	private static final long serialVersionUID = 1L;
 
-	Map<IChromosome,Double> alreadyCalculated = new HashMap<IChromosome,Double>();
+//	Map<IChromosome,Double> alreadyCalculated = new HashMap<IChromosome,Double>();
+	Map<List<Integer>,Double> alreadyCalculated = new HashMap<List<Integer>,Double>();
 	DataUnits data;
 	public MappingFittnessFunction(DataUnits data) {
 		this.data = data;
+		log.trace("Fittness function created");
 	}
 	@Override
 	protected double evaluate(IChromosome chromosome) {
-		if(alreadyCalculated.keySet().contains(chromosome)) {
-			log.trace("Chromosome already calculated!");
-			return alreadyCalculated.get(chromosome);
+		List<Integer> mapping = GeneticMapper.chromosomeToMapping(chromosome); 
+//		log.trace("alreadyCalculated: "+alreadyCalculated.size());//+" > "+alreadyCalculated);
+		for(List<Integer> ch: alreadyCalculated.keySet())
+			if(ch.equals(mapping)) {
+			log.trace("Chromosome "+mapping+" already calculated with value "+1/alreadyCalculated.get(mapping)+"!");
+			return 1/alreadyCalculated.get(mapping);
 		}
+
+			//		if(alreadyCalculated.keySet().contains(chromosome)) {
+//			log.trace("Chromosome "+mapping+" already calculated with value "+alreadyCalculated.get(chromosome)+"!");
+//			return alreadyCalculated.get(chromosome);
+//		}
 		
 		
 
-		List<Integer> mapping = GeneticMapper.chromosomeToMapping(chromosome); 
 
 		//avoid duplicates
 //		Set<Integer> v = new HashSet<Integer>();
@@ -64,13 +73,15 @@ public class MappingFittnessFunction extends FitnessFunction {
 
 			log.trace("checking: "+mapping+ 
 					" time = "+(System.currentTimeMillis()-ts)+
-					" result = "	+ new DecimalFormat("#.###").format(error));
-			alreadyCalculated.put(chromosome, 1/error);
+					" result = "	+ new DecimalFormat("#.###").format(1/error));
+			//alreadyCalculated.put(chromosome, 1/error);
+			alreadyCalculated.put(mapping, error);
 
 			return 1/error;
 		}catch(TooManyEvaluationsException ex) {log.trace("Problem too complicated, skipping...");}
 		catch(Exception ex) {log.trace(ex);}
-		alreadyCalculated.put(chromosome, 0.0);
+		//alreadyCalculated.put(chromosome, 0.0);
+		alreadyCalculated.put(mapping, 0.0);
 		return 0.0;
 
 	}

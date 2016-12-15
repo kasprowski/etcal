@@ -11,6 +11,9 @@ import java.util.concurrent.Future;
 
 import org.apache.log4j.Logger;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import pl.kasprowski.etcal.calibration.Calibrator;
 import pl.kasprowski.etcal.calibration.RegressionData;
 import pl.kasprowski.etcal.dataunits.DU2RDConverter;
@@ -19,7 +22,7 @@ import pl.kasprowski.etcal.dataunits.DataUnits;
 import pl.kasprowski.etcal.dataunits.Target;
 import pl.kasprowski.etcal.evaluation.Errors;
 import pl.kasprowski.etcal.evaluation.Evaluator;
-import pl.kasprowski.etcal.filters.CalFilter;
+import pl.kasprowski.etcal.filters.Filter;
 import pl.kasprowski.etcal.helpers.ObjDef;
 import pl.kasprowski.etcal.helpers.ObjectBuilder;
 import pl.kasprowski.etcal.mapper.MapTargets;
@@ -37,7 +40,7 @@ public class ETCal implements IETCal{
 	Logger log = Logger.getLogger(ETCal.class);
 
 	private DataUnits dataUnits = new DataUnits();
-	private List<CalFilter> filters = new ArrayList<CalFilter>();
+	private List<Filter> filters = new ArrayList<Filter>();
 
 	private Map<String, String> info = new HashMap<String,String>();
 
@@ -70,13 +73,13 @@ public class ETCal implements IETCal{
 	@Override
 	public void addFilter(ObjDef params) throws Exception {
 		//CalFilter filter = CalFilter.getFilter(params);
-		CalFilter filter = (CalFilter)ObjectBuilder.getObjectFromObjDef(params);
+		Filter filter = (Filter)ObjectBuilder.getObjectFromObjDef(params);
 		
 		addFilter(filter);
 	}
 
 	@Override
-	public void addFilter(CalFilter calFilter) {
+	public void addFilter(Filter calFilter) {
 		filters.add(calFilter);
 		log.debug("Added "+calFilter+" filter");		
 		info.put("filtersNum", ""+filters.size());
@@ -86,7 +89,7 @@ public class ETCal implements IETCal{
 
 	@Override
 	public void resetFilters() {
-		filters = new ArrayList<CalFilter>();
+		filters = new ArrayList<Filter>();
 		log.debug("All filters removed");		
 		info.remove("filtersNum");
 		info.remove("filters");
@@ -95,11 +98,11 @@ public class ETCal implements IETCal{
 
 
 	public void useFilter(ObjDef params) throws Exception {
-		CalFilter filter = (CalFilter)ObjectBuilder.getObjectFromObjDef(params);
+		Filter filter = (Filter)ObjectBuilder.getObjectFromObjDef(params);
 		useFilter(filter);
 	}
 	@Override
-	public void useFilter(CalFilter calFilter) {
+	public void useFilter(Filter calFilter) {
 		dataUnits = calFilter.filter(dataUnits);
 		log.debug("Applied "+calFilter+" filter");		
 	}
@@ -132,9 +135,11 @@ public class ETCal implements IETCal{
 		calibrationProcess = pool.submit(new Callable<Void>() {
 			@Override
 			public Void call() throws Exception{
+				info.put("calibrationPending", "true");
+
 				log.trace("Filtering with "+filters.size()+" filters");
 				DataUnits datau = dataUnits;
-				for(CalFilter filter:filters) {  
+				for(Filter filter:filters) {  
 					log.trace("Applying "+filter.getClass().getName()+" filter");
 					datau = filter.filter(datau); 
 				}
@@ -151,6 +156,7 @@ public class ETCal implements IETCal{
 				log.trace("Calibration finished in "+(System.currentTimeMillis() - startCalibration)+" ms");
 				if(callback!=null)
 					callback.ready();
+				info.remove("calibrationPending");
 				return null;
 			}
 		});
@@ -211,6 +217,14 @@ public class ETCal implements IETCal{
 
 		datau = MapTargets.mapTargets(datau, mappings);
 
+		if(optimizationProcess!=null && !optimizationProcess.isDone() 
+				&& optimizer.getBest()!=null) {
+			best = optimizer.getBest(); 
+			info.put("calibrator", best.toString());
+			info.remove("calibrationTime");
+		}
+
+		
 		Evaluator e = new Evaluator();
 		return e.calculate(best, datau, testUnits);
 	}
@@ -241,12 +255,13 @@ public class ETCal implements IETCal{
 		optimizationProcess =  pool.submit(new Callable<Void>() {
 			@Override
 			public Void call() throws Exception{
+				info.put("optimizationPending", "true");
 				long startOptimization = System.currentTimeMillis();
 				log.trace("Optimization start");
 
 				log.trace("Filtering with "+filters.size()+" filters");
 				DataUnits datau = dataUnits;
-				for(CalFilter filter:filters) {  
+				for(Filter filter:filters) {  
 					log.trace("Applying "+filter.getClass().getName()+" filter");
 					datau = filter.filter(datau); 
 				}
@@ -256,7 +271,7 @@ public class ETCal implements IETCal{
 					optimizer.optimize(datau);
 					best = optimizer.getBest();
 					info.put("calibrator", best.toString());
-					log.trace("Optimization finished in "+(System.currentTimeMillis() - startOptimization)+" ms");
+					log.debug("Optimization finished in "+(System.currentTimeMillis() - startOptimization)+" ms");
 				} catch (Exception e) {
 					//		throw new RuntimeException(e.fillInStackTrace());
 					e.printStackTrace();
@@ -265,6 +280,7 @@ public class ETCal implements IETCal{
 				info.put("optimizationTime",""+(System.currentTimeMillis() - startOptimization));
 				if(callback!=null)
 					callback.ready();
+				info.remove("optimizationPending");
 				return null;
 			}
 		});
@@ -295,6 +311,7 @@ public class ETCal implements IETCal{
 		mappingProcess =  pool.submit(new Callable<Void>() {
 			@Override
 			public Void call() throws Exception{
+				info.put("mappingPending", "true");
 				long startMapping = System.currentTimeMillis();
 				log.trace("Mapping start");
 				try {
@@ -310,6 +327,7 @@ public class ETCal implements IETCal{
 				info.put("mappingTime",""+(System.currentTimeMillis() - startMapping));
 				if(callback!=null)
 					callback.ready();
+				info.remove("mappingPending");
 				return null;
 			}
 		});
@@ -319,6 +337,12 @@ public class ETCal implements IETCal{
 	@Override
 	public Map<String, String> getStatusInfo() {
 		return info;
+	}
+
+	@Override
+	public String getStatusInfoJSON() {
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		return gson.toJson(info);
 	}
 
 	@Override

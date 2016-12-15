@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.math3.exception.TooManyEvaluationsException;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.jgap.FitnessFunction;
 import org.jgap.Gene;
@@ -18,12 +17,9 @@ import pl.kasprowski.etcal.evaluation.Evaluator;
 
 public class PolynomialFittnessFunction extends FitnessFunction {
 	static Logger log = Logger.getLogger(PolynomialFittnessFunction.class);
-	static{
-		log.setLevel(Level.TRACE);
-	}
 	private static final long serialVersionUID = 1L;
 
-	Map<IChromosome,Double> alreadyCalculated = new HashMap<IChromosome,Double>();
+	Map<String,Double> alreadyCalculated = new HashMap<String,Double>();
 	DataUnits data;
 	int cvSets;
 	int cvType; 
@@ -34,17 +30,24 @@ public class PolynomialFittnessFunction extends FitnessFunction {
 	}
 	@Override
 	protected double evaluate(IChromosome chromosome) {
+
+		for(String map: alreadyCalculated.keySet())
+			if(map.equals(MaskedPolynomialProblem.maskAsString(chromosomeToMask(chromosome)))) {
+				log.trace(" >"+map+" already calculated with value "+alreadyCalculated.get(map)+"!");
+				return 1/alreadyCalculated.get(map);
+			}
+
+
 		if(alreadyCalculated.keySet().contains(chromosome)) {
+
 			log.trace("Chromosome already calculated!");
 			return alreadyCalculated.get(chromosome);
 		}
 
 
-		boolean[] mask = new boolean[chromosome.getGenes().length];
-		for(int i=0;i<chromosome.getGenes().length;i++) {
-			Gene gene = chromosome.getGene(i);
-			mask[i] = (boolean)gene.getAllele();
-		}
+
+		boolean[] mask = chromosomeToMask(chromosome); 
+
 
 		try{
 
@@ -61,13 +64,24 @@ public class PolynomialFittnessFunction extends FitnessFunction {
 			log.trace("checking: "+MaskedPolynomialProblem.maskAsString(mask)+ 
 					" time = "+(System.currentTimeMillis()-ts)+
 					" result = "	+ new DecimalFormat("#.###").format(error));
-			alreadyCalculated.put(chromosome, 1/error);
+			alreadyCalculated.put(MaskedPolynomialProblem.maskAsString(chromosomeToMask(chromosome)), error);
 
 			return 1/error;
 		}catch(TooManyEvaluationsException ex) {log.trace("Problem too complicated, skipping...");}
 		catch(Exception ex) {log.trace(ex);}
-		alreadyCalculated.put(chromosome, 0.0);
+		alreadyCalculated.put(MaskedPolynomialProblem.maskAsString(chromosomeToMask(chromosome)), Double.MAX_VALUE);
 		return 0.0;
 
+	}
+
+
+	boolean[] chromosomeToMask(IChromosome chromosome) { 
+		boolean[] mask = new boolean[chromosome.getGenes().length];
+		for(int i=0;i<chromosome.getGenes().length;i++) {
+			Gene gene = chromosome.getGene(i);
+			mask[i] = (boolean)gene.getAllele();
+
+		}
+		return mask;
 	}
 }
