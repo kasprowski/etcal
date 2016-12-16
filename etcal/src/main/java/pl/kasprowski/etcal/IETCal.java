@@ -35,7 +35,7 @@ public interface IETCal {
 	 * @param param object with all information necessary to build a filter
 	 * @throws Exception
 	 */
-	public void addFilter(ObjDef param) throws Exception;
+	public void addFilter(ObjDef param);
 	/**
 	 * Adds filter implementing pl.kasprowski.calsoft.filters.CalFilter interface
 	 * @param calFilter
@@ -47,23 +47,23 @@ public interface IETCal {
 	public void resetFilters();
 	
 
-	public void useFilter(ObjDef param) throws Exception;
+	public void useFilter(ObjDef param);
 	public void useFilter(Filter calFilter);
 	/**
 	 * Builds calibration model using a generic calibrator and data added by add() method
 	 * Calibrator must extend pl.kasprowski.calibration.Calibrator class 
 	 * @param params object with all information necessary to build a calibrator
 	 */
-	public void build(ObjDef params) throws Exception;
-	public Future<Void> buildAsync(ObjDef params, Callback callback) throws Exception;
+	public void build(ObjDef params);
+	public Future<Void> buildAsync(ObjDef params, Callback callback);
 	
 	/**
 	 * Builds calibration model using calibrator and data added by add() method
 	 * Calibrator must extend pl.kasprowski.calibration.Calibrator class
 	 * @param calibrator
 	 */
-	public void build(Calibrator calibrator) throws Exception;
-	public Future<Void> buildAsync(Calibrator calibrator, Callback callback) throws Exception;
+	public void build(Calibrator calibrator);
+	public Future<Void> buildAsync(Calibrator calibrator, Callback callback);
 
 
 	/**
@@ -92,17 +92,17 @@ public interface IETCal {
 	 * Builds optimizer using CalPar object and runs it for current data
 	 * @param params object with all information necessary to build an optimizer
 	 */
-	public void optimize(ObjDef params) throws Exception;
+	public void optimize(ObjDef params);
 
 	/**
 	 * Builds optimizer using CalPar object and runs anynchronously it for current data
 	 * @param params object with all information necessary to build an optimizer 
 	 * @param callback 
 	 */
-	public Future<Void> optimizeAsync(ObjDef params, Callback callback) throws Exception;
+	public Future<Void> optimizeAsync(ObjDef params, Callback callback);
 
-	public void optimize(Optimizer optimizer) throws Exception;
-	public Future<Void> optimizeAsync(Optimizer optimizer, Callback callback) throws Exception;
+	public void optimize(Optimizer optimizer);
+	public Future<Void> optimizeAsync(Optimizer optimizer, Callback callback);
 
 	
 	
@@ -111,11 +111,11 @@ public interface IETCal {
 	 * @param mapperName
 	 * @param params
 	 */
-	public void mapTargets(ObjDef params) throws Exception;
-	public Future<Void> mapTargetsAsync(ObjDef params, Callback callback) throws Exception;
+	public void mapTargets(ObjDef params);
+	public Future<Void> mapTargetsAsync(ObjDef params, Callback callback);
 	
-	public void mapTargets(Mapper mapper) throws Exception;
-	public Future<Void> mapTargetsAsync(Mapper mapper, Callback callback) throws Exception;
+	public void mapTargets(Mapper mapper);
+	public Future<Void> mapTargetsAsync(Mapper mapper, Callback callback);
 	
 	/**
 	 * Returns information zbout the current state of the object

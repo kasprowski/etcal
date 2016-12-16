@@ -7,8 +7,23 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import pl.kasprowski.etcal.ETCal;
 
 public class Helper {
+	public static ETCal getEtCal(HttpServletRequest req) {
+		HttpSession session = req.getSession();
+		ETCal etcal;
+		if(session.getAttribute("etcal")==null) { 
+			etcal = new ETCal();
+			session.setAttribute("etcal", etcal);
+		}
+		else
+			etcal = (ETCal)session.getAttribute("etcal");
+		return etcal;
+	}
+	
 	public static BufferedReader getReader(HttpServletRequest req,String param) {
 		BufferedReader dataStream = null;
 		try{

@@ -7,7 +7,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import pl.kasprowski.etcal.ETCal;
 
@@ -21,15 +20,7 @@ public class StatusServlet extends HttpServlet{
 	}
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		HttpSession session = req.getSession();
-		
-		ETCal etcal;
-		if(session.getAttribute("etcal")==null) 
-			etcal = new ETCal();
-		else
-			etcal = (ETCal)session.getAttribute("etcal");
-		
+		ETCal etcal = Helper.getEtCal(req);
 		System.out.println("Status: "+etcal.getStatusInfo());
 		resp.getWriter().write(etcal.getStatusInfoJSON());
 	}

@@ -3,6 +3,12 @@ package pl.kasprowski.etcal.evaluation;
 import java.text.DecimalFormat;
 import java.util.List;
 
+/**
+ * Encapsulates results of error calculation
+ * 
+ * @author pawel@kasprowski.pl
+ *
+ */
 public class Errors {
 	private double rSquareX;
 	private double rSquareY;
@@ -71,6 +77,11 @@ public class Errors {
 	}
 
 	
+	/**
+	 * Averages errors from list of Error objects
+	 * @param le
+	 * @return
+	 */
 	public static Errors average(List<Errors> le) {
 		Errors res = new Errors();
 		for(Errors e:le) {

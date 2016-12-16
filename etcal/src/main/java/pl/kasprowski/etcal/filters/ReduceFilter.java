@@ -9,8 +9,9 @@ import pl.kasprowski.etcal.dataunits.DataUnits;
 import pl.kasprowski.etcal.dataunits.Target;
 
 /**
- * For every reading calculates median of all variables 
- * taking into account <code>len</code> neighboring readings
+ * For every <em>len</em> DataUnit objects calculates median of all variables
+ * and reduces it  to one medianized DataUnit
+ * 
  * @author pawel@kasprowski.pl
  *
  */
@@ -28,10 +29,6 @@ public class ReduceFilter implements Filter {
 
 	@Override
 	public DataUnits filter(DataUnits dataUnits) {
-		
-//		RegressionData data = DU2RDConverter.dataUnits2RegressionData(dataUnits);
-//		RegressionData newdata = new RegressionData();
-
 		int size = dataUnits.getDataUnits().size();
 		DataUnits newDataUnits = new DataUnits();
 		DataUnit newDu = null;
@@ -44,8 +41,6 @@ public class ReduceFilter implements Filter {
 			for(int j=i;j<i+len;j++) {
 				DataUnit oldDu = dataUnits.getDataUnits().get(j);
 				points.add(oldDu.getVariablesAsTable());
-//				y1.add(data.getY1(j));
-//				y2.add(data.getY2(j));
 				y1.add(oldDu.getTargets().get(0).getX()); //TODO: only the first target is taken!
 				y2.add(oldDu.getTargets().get(0).getY());
 
@@ -53,17 +48,14 @@ public class ReduceFilter implements Filter {
 			double[] p = medianize(points);
 			double ny1 = median(y1);
 			double ny2 = median(y2);
-//			newdata.addPoint(p, ny1, ny2, 1);
 			newDu = new DataUnit();
 			
 			newDu.addVariables(p);
 			newDu.addTarget(new Target(ny1,ny2,1)); //TODO: what about weight?
-	//		for(int j=0;j<len;j++) //to be able to compare
-				newDataUnits.add(newDu);
+			newDataUnits.add(newDu);
 
 		}
-//		for(int j=0;j<len;j++)	newDataUnits.add(newDu); //tail
-	return newDataUnits; //DU2RDConverter.regressionData2dataUnits(newdata);
+	return newDataUnits; 
 	}
 
 	double[] medianize(List<double[]> points) {

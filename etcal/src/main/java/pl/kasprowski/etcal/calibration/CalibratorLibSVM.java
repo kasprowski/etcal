@@ -5,7 +5,14 @@ import weka.classifiers.Classifier;
 import weka.classifiers.functions.LibSVM;
 import weka.core.SelectedTag;
 
+/**
+ * Calibrator that uses LibSVM to build a model
+ * It has two input parameters: expCost and expGamma
+ * @author pawel@kasprowski.pl
+ *
+ */
 public class CalibratorLibSVM extends CalibratorWeka {
+
 	private Integer expCost;
 	private Integer expGamma;
 	public void setExpCost(Integer cost) {this.expCost = cost;}

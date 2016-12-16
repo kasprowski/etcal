@@ -5,7 +5,15 @@ import java.util.List;
 
 import pl.kasprowski.etcal.calibration.RegressionData;
 
+/**
+ * Two helper methods converting DataUnits objects to RegressionData 
+ * and vice versa.
+ * 
+ * @author pawel@kasprowski.pl
+ *
+ */
 public class DU2RDConverter {
+	
 	public static RegressionData dataUnits2RegressionData(DataUnits dataUnits) {
 		RegressionData data = new RegressionData();
 		for(DataUnit unit:dataUnits.getDataUnits()) {

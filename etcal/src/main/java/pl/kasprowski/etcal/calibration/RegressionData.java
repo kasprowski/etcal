@@ -7,6 +7,8 @@ import java.util.List;
  * Used to store data needed for calibration
  * Created from DataUnits object but contrary to DataUnits there is only one Target taken for each reading
  * Target in DataUnits corresponds to y1 and y2 lists
+ * The class is created just for convenience - no need to use it in your own calibrators
+ * 
  * @author pawel@kasprowski.pl
  *
  */

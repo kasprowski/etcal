@@ -3,6 +3,13 @@ package pl.kasprowski.etcal.dataunits;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Elementary data unit containing list of input values from eye tracker (variables)
+ * and one or more Target objects asociated with this variables
+ * 
+ * @author pawel@kasprowski.pl
+ *
+ */
 public class DataUnit {
 	private List<Double> variables = new ArrayList<Double>();
 	private List<Target> targets = new ArrayList<Target>();

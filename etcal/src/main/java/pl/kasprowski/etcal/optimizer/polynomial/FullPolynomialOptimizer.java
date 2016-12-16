@@ -13,6 +13,14 @@ import pl.kasprowski.etcal.dataunits.DU2RDConverter;
 import pl.kasprowski.etcal.dataunits.DataUnits;
 import pl.kasprowski.etcal.evaluation.Evaluator;
 
+/**
+ * For the given dataUnits generates all possible masks (all possible sets of terms 
+ * for 3rd degree polynomial) and checks every set for errors.
+ * getBest() method returns the best calibrator found so far.
+ * 
+ * @author pawel@kasprowski.pl
+ *
+ */
 public class FullPolynomialOptimizer extends PolynomialOptimizer {
 	Logger log = Logger.getLogger(FullPolynomialOptimizer.class);
 	
@@ -54,13 +62,11 @@ public class FullPolynomialOptimizer extends PolynomialOptimizer {
 		int size = 1 << bits;
 		ArrayList<boolean[]> masks = new ArrayList<boolean[]>();
 		for (int val = 1; val < size; val++) {
-			//BitSet bs = new BitSet(bits);
 			boolean[] m = new boolean[bits];
 			for (int i = bits-1; i >= 0; i--) {
 				m[i] = (val & (1 << i)) != 0;
 			}
 			masks.add(m);
-			//			System.out.println(val+" > "+Arrays.toString(m));
 		}
 		return masks;
 	}

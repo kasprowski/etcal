@@ -15,6 +15,12 @@ import pl.kasprowski.etcal.calibration.polynomial.MaskedPolynomialProblem;
 import pl.kasprowski.etcal.dataunits.DataUnits;
 import pl.kasprowski.etcal.evaluation.Evaluator;
 
+/**
+ * Used by PolynomialOptimizers to evaluate a given mask
+ * 
+ * @author pawel@kasprowski.pl
+ *
+ */
 public class PolynomialFittnessFunction extends FitnessFunction {
 	static Logger log = Logger.getLogger(PolynomialFittnessFunction.class);
 	private static final long serialVersionUID = 1L;

@@ -12,6 +12,12 @@ import pl.kasprowski.etcal.dataunits.DU2RDConverter;
 import pl.kasprowski.etcal.dataunits.DataUnits;
 import pl.kasprowski.etcal.dataunits.Target;
 
+/**
+ * Calculates errors for DataUnit objects in given DataUnits object and calibrator
+ * 
+ * @author pawel@kasprowski.pl
+ *
+ */
 public class Evaluator {
 	static Logger log = Logger.getLogger(Evaluator.class);
 	static{
@@ -28,10 +34,12 @@ public class Evaluator {
 	}
 
 	/**
-	 * Cross validation
+	 * Calculates errors using cross validation
 	 * @param c
 	 * @param data
 	 * @param foldsNo
+	 * @param cvType
+	 * 
 	 * @return
 	 */
 	public Errors calculate(Calibrator c,DataUnits dataUnits, int foldsNo, int cvType) {
@@ -48,7 +56,7 @@ public class Evaluator {
 		for(int i=0;i<foldsNo;i++) folds.add(new RegressionData());
 
 		if(cvType==0) {
-			//stripped
+			//striped
 			int currentFold = 0;
 			for(int i=0;i<data.size();i++) {
 				folds.get(currentFold).addPoint(data.getX(i), data.getY1(i), data.getY2(i), data.getWeights(i));

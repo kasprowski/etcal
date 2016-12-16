@@ -14,7 +14,12 @@ import pl.kasprowski.etcal.dataunits.DataUnits;
 import pl.kasprowski.etcal.dataunits.Target;
 
 /**
- * Calibrates using mask
+ * Calibrator that uses 3rd degree polynomial to build a model.
+ * It has two parameters: 
+ * mask - tells which terms of the polynomial take into account, in form: 00001111
+ * maxEval - how many evaluations before TooManyEvaluations exception is thrown
+ * Higher values of maxEval result in longer calculations but less TME exceptions
+ *  
  * @author pawel@kasprowski.pl
  *
  */
@@ -32,15 +37,6 @@ public class CalibratorPolynomial implements Calibrator{
 	private String mask;
 	public String getMask() {return mask;}
 	public void setMask(String mask) {this.mask = mask;}
-
-
-	/**
-	 * Default constructor with all terms
-	 * @param data
-	 */
-	public CalibratorPolynomial() {
-	}
-
 
 	public void calculate(DataUnits dataUnits) {
 		RegressionData data = DU2RDConverter.dataUnits2RegressionData(dataUnits);
@@ -117,9 +113,5 @@ public class CalibratorPolynomial implements Calibrator{
 	@Override
 	public String toString() {
 		return getClass().getName()+" mask:"+getMask();
-		//return "{\"type\"=\""+getClass().getName()+"\" \"params\":{\"mask\"=\""+getMask()+"\"}}";
-//		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-//		return gson.toJson(this);
-		
 	}
 }

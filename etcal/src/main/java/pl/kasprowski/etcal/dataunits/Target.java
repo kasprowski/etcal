@@ -1,5 +1,12 @@
 package pl.kasprowski.etcal.dataunits;
 
+/**
+ * Class for storing gaze coordinates.
+ * Additional parameter w (weight) not used yet in the current implementation of ETCAL
+ * 
+ * @author pawel@kasprowski.pl
+ *
+ */
 public class Target {
 	private double x;
 	private double y;

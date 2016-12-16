@@ -14,6 +14,14 @@ import pl.kasprowski.etcal.calibration.polynomial.MaskedPolynomialProblem;
 import pl.kasprowski.etcal.dataunits.DataUnits;
 import pl.kasprowski.etcal.optimizer.GeneticOptimizer;
 
+/**
+ * For the given dataUnits tries to find the best masks (set of terms 
+ * for 3rd degree polynomial) - uses genetic algorithm.
+ * getBest() method returns the best calibrator found so far.
+ *
+ * @author pawel@kasprowski.pl
+ *
+ */
 public class GeneticPolynomialOptimizer extends PolynomialOptimizer implements GeneticOptimizer{
 	Logger log = Logger.getLogger(GeneticPolynomialOptimizer.class);
 

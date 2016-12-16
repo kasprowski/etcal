@@ -18,6 +18,11 @@ public class ObjectBuilder {
 		log.setLevel(Level.WARN);
 	}
 
+	/**
+	 * Returns object created using the ObjDef
+	 * @param objDef
+	 * @return
+	 */
 	public static Object getObjectFromObjDef(ObjDef objDef) {
 		log.trace("Building object "+objDef.type+" with: "+objDef.params);
 		Object o = null;

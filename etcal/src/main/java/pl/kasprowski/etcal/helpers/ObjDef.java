@@ -42,7 +42,7 @@ public class ObjDef {
 	}
 
 	/**
-	 * Loads ObjDef fro JSON redaer
+	 * Loads ObjDef from JSON redaer
 	 * @param reader
 	 * @return
 	 */

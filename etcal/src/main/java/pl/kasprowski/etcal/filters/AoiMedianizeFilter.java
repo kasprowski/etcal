@@ -36,12 +36,10 @@ public class AoiMedianizeFilter implements Filter {
 		Double lastY2 = null;
 		List<double[]> points = new ArrayList<double[]>();
 		for(int i=0;i<data.size();i++) {
-			//System.out.println(i);
 			if(data.getY1(i).equals(lastY1) && data.getY2(i).equals(lastY2)) {
 				points.add(data.getX(i));
 			}
 			else {
-				//System.out.println(lastY1+" "+lastY2+" "+points.size()+" "+points);
 				if(points.size()>minSize) {
 					double[] p = medianize(points);
 					newdata.addPoint(p, lastY1, lastY2, points.size());

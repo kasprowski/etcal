@@ -5,6 +5,13 @@ import org.apache.log4j.Logger;
 import pl.kasprowski.etcal.calibration.Calibrator;
 import pl.kasprowski.etcal.dataunits.DataUnits;
 
+/**
+ * Abstract class for optimizers
+ * Contains all useful parameters
+ * 
+ * @author pawel@kasprowski.pl
+ *
+ */
 public abstract class AbstractOptimizer implements Optimizer{
 	Logger log = Logger.getLogger(AbstractOptimizer.class);
 	public abstract void optimize(DataUnits data) throws Exception;

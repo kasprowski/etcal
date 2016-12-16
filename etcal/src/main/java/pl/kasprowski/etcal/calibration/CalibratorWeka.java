@@ -15,6 +15,14 @@ import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
 
+/**
+ * Calibrator that may use any classifier implemented in WEKA that works
+ * for regression.
+ * Classifiers should be created in subclasses (see CalibratorLibSVM for example)
+ * 
+ * @author pawel@kasprowski.pl
+ *
+ */
 public class CalibratorWeka implements Calibrator{
 	boolean calculated = false;
 

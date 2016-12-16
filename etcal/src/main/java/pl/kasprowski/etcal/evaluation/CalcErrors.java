@@ -4,6 +4,12 @@ import java.util.List;
 
 import pl.kasprowski.etcal.dataunits.Target;
 
+/**
+ * Calculates various errors when comparing two lists if Target objects
+ * 
+ * @author pawel@kasprowski.pl
+ *
+ */
 public class CalcErrors {
 //	private static double coefX = 40;
 //	private static double coefY = 32;

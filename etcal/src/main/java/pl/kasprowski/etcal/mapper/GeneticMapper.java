@@ -17,6 +17,12 @@ import org.jgap.impl.IntegerGene;
 import pl.kasprowski.etcal.dataunits.DataUnits;
 import pl.kasprowski.etcal.optimizer.GeneticOptimizer;
 
+/**
+ * Implementation of Mapper interface that uses genetic algorithm to find the best mapping
+ * 
+ * @author pawel@kasprowski.pl
+ *
+ */
 public class GeneticMapper implements Mapper,GeneticOptimizer{
 	Logger log = Logger.getLogger(GeneticMapper.class);
 	
@@ -63,49 +69,17 @@ public class GeneticMapper implements Mapper,GeneticOptimizer{
 
 		log.debug("Starting evolution");
 
-		//initialize with the correct gene
-//		IChromosome[] initialChromosomes = new IChromosome[genPopulation];
-//		Gene[] genes0 = new Gene[size];
-//		for(int i=0;i<size;i++) {
-//			int max = dataUnits.getDataUnits().get(i).getTargets().size()-1;
-//			genes0[i] = new IntegerGene(conf, 0, max);
-//			genes0[i].setAllele(i);
-//		}
-//		initialChromosomes[0] = new Chromosome(conf, genes0 ); 
-//		
-//		for(int j=1;j<genPopulation;j++) {
-//			Gene[] genes = new Gene[size];
-//			for(int i=0;i<size;i++) {
-//				int max = dataUnits.getDataUnits().get(i).getTargets().size()-1;
-//				genes[i] = new IntegerGene(conf, 0, max);
-//				int x = new Random().nextInt(max+1);
-//				genes[i].setAllele(x);
-//			}
-//			initialChromosomes[j] = new Chromosome(conf, genes ); 
-//		}
-//		Genotype population = new Genotype(conf,new Population(conf,initialChromosomes));
 		Genotype population = Genotype.randomInitialGenotype( conf );
 		
 		
 		IChromosome bestInitialSolution = population.getFittestChromosome();
-		log.trace("BEST: "+ bestInitialSolution);
-
-//		setBest(new CalibratorPolynomial(data, chromosomeToMask(bestSolutionSoFar)),
-//				chromosomeToMask(bestSolutionSoFar));
 
 		IChromosome currentBestSolution = (IChromosome)bestInitialSolution.clone();
 		int iterationsWithNoProgress = 0;
 		for(int i=0;i<genIterations;i++) {
 			log.trace("Iteration "+i);
 			population.evolve();
-//			for(IChromosome ch:population.getChromosomes())
-//				log.trace(ch);
-//			log.trace("====");
-//			for(Object chl:population.getFittestChromosomes(3) )
-//				log.trace((IChromosome)chl);
 			IChromosome newBestSolution = population.getFittestChromosome();
-//			setBest(new CalibratorPolynomial(data, chromosomeToMask(bestSolutionSoFar)),
-//					chromosomeToMask(bestSolutionSoFar));
 			log.trace("New Best solution: "+newBestSolution.getGene(0));
 			if(myFunc.getFitnessValue(newBestSolution)<=myFunc.getFitnessValue(currentBestSolution)) {
 				log.trace("Current solution doesn't improve the previous one" );
@@ -128,17 +102,11 @@ public class GeneticMapper implements Mapper,GeneticOptimizer{
 		}
 
 		
-//		setBest(new CalibratorPolynomial(data, chromosomeToMask(population.getFittestChromosome())),
-//				chromosomeToMask(population.getFittestChromosome()));
 		log.debug("Evolution finished, best: "+
 				1/myFunc.getFitnessValue(currentBestSolution)+" "+
 				chromosomeToMapping(currentBestSolution)
 				);
 
-//		setOptimizing(false);
-		//	return chromosomeToMask(population.getFittestChromosome());
-		
-		
 		return chromosomeToMapping(currentBestSolution);
 		
 	}
