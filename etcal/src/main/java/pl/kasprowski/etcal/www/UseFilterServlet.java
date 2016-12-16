@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import pl.kasprowski.etcal.ETCal;
 import pl.kasprowski.etcal.helpers.ObjDef;
 
-@WebServlet("/addfilter")
+@WebServlet("/usefilter")
 public class UseFilterServlet extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 

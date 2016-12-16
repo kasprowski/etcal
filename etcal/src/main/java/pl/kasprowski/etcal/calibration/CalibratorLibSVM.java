@@ -13,8 +13,8 @@ import weka.core.SelectedTag;
  */
 public class CalibratorLibSVM extends CalibratorWeka {
 
-	private Integer expCost;
-	private Integer expGamma;
+	private Integer expCost = -1;
+	private Integer expGamma = 2;
 	public void setExpCost(Integer cost) {this.expCost = cost;}
 	public void setExpGamma(Integer gamma) {this.expGamma = gamma;}
 

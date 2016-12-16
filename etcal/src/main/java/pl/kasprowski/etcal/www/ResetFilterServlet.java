@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import pl.kasprowski.etcal.ETCal;
 
-@WebServlet("/addfilter")
+@WebServlet("/resetfilter")
 public class ResetFilterServlet extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 

@@ -156,7 +156,7 @@ public class ETCal implements IETCal{
 						datau = filter.filter(datau); 
 					}
 					datau = MapTargets.mapTargets(datau, mappings);
-					log.trace("Building calibrator ");
+					log.trace("Building calibrator "+calibrator);
 					long startCalibration = System.currentTimeMillis();
 					calibrator.calculate(datau);
 
